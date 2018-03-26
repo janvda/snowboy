@@ -9,23 +9,16 @@ def signal_handler(signal, frame):
     global interrupted
     interrupted = True
 
-
 def interrupt_callback():
     global interrupted
     return interrupted
 
-def hotword_detected():
-    """
-    """
-    mqtt_client.publish("pi3/aiy/snowboy/event_type","hotword_detected" )
-    print("hotword_detected")
-
-if len(sys.argv) == 1:
+"""if len(sys.argv) == 1:
     print("Error: need to specify model name")
     print("Usage: python demo.py your.model")
     sys.exit(-1)
 
-model = sys.argv[1]
+model = sys.argv[1]"""
 
 # capture SIGINT signal, e.g., Ctrl+C
 #signal.signal(signal.SIGINT, signal_handler)
@@ -54,12 +47,27 @@ mqtt_client.connect(mqtt_broker_address) #connect to broker
 mqtt_client.subscribe("pi3/aiy/snowboy/cmd",1)
 mqtt_client.loop_start()
 
+# capture SIGINT signal, e.g., Ctrl+C
+#signal.signal(signal.SIGINT, signal_handler)
 
-detector = snowboydecoder_arecord.HotwordDetector(model, sensitivity=0.5)
-print('Listening... Press Ctrl+C to exit')
+
+models = [ "./resources/models/snowboy.umdl", 
+           "./resources/models/stemija.pmdl" ]
+sensitivity = [0.5]*len(models)
+detector = snowboydecoder_arecord.HotwordDetector(models, sensitivity=sensitivity)
+
 
 # main loop
-detector.start(detected_callback=hotword_detected,
+print('Listening... Press Ctrl+C to exit')
+def hotword_detected():
+    """
+    """
+    mqtt_client.publish("pi3/aiy/snowboy/event_type","hotword_detected" )
+    print("hotword_detected")
+		
+callbacks = [lambda: hotword_detected(),
+             lambda: hotword_detected()]
+detector.start(detected_callback=callbacks,
                interrupt_check=interrupt_callback,
                sleep_time=0.03)
 
