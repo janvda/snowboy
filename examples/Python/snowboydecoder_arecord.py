@@ -132,9 +132,9 @@ class HotwordDetector(object):
 
         self.init_recording()
 
-        if interrupt_check():
+        """if interrupt_check():
             logger.debug("detect voice return")
-            return
+            return"""
 
         tc = type(detected_callback)
         if tc is not list:
@@ -149,25 +149,25 @@ class HotwordDetector(object):
         logger.debug("detecting...")
 
         while True:
-            if interrupt_check():
+            """if interrupt_check():
                 logger.debug("detect voice break")
-                break
+                break"""
             data = self.ring_buffer.get()
             if len(data) == 0:
                 time.sleep(sleep_time)
                 continue
-
-            ans = self.detector.RunDetection(data)
-            if ans == -1:
-                logger.warning("Error initializing streams or reading audio data")
-            elif ans > 0:
-                message = "Keyword " + str(ans) + " detected at time: "
-                message += time.strftime("%Y-%m-%d %H:%M:%S",
-                                         time.localtime(time.time()))
-                logger.info(message)
-                callback = detected_callback[ans-1]
-                if callback is not None:
-                    callback()
+            if not interrupt_check():
+              ans = self.detector.RunDetection(data)
+              if ans == -1:
+                  logger.warning("Error initializing streams or reading audio data")
+              elif ans > 0:
+                  message = "Keyword " + str(ans) + " detected at time: "
+                  message += time.strftime("%Y-%m-%d %H:%M:%S",
+                                           time.localtime(time.time()))
+                  logger.info(message)
+                  callback = detected_callback[ans-1]
+                  if callback is not None:
+                      callback()
 
         logger.debug("finished.")
 

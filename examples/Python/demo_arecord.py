@@ -22,7 +22,7 @@ if len(sys.argv) == 1:
 model = sys.argv[1]
 
 # capture SIGINT signal, e.g., Ctrl+C
-signal.signal(signal.SIGINT, signal_handler)
+#signal.signal(signal.SIGINT, signal_handler)
 
 detector = snowboydecoder_arecord.HotwordDetector(model, sensitivity=0.5)
 print('Listening... Press Ctrl+C to exit')
