@@ -14,6 +14,12 @@ def interrupt_callback():
     global interrupted
     return interrupted
 
+def hotword_detected():
+    """
+    """
+    mqtt_client.publish("pi3/aiy/snowboy/event_type","hotword_detected" )
+    print("hotword_detected")
+
 if len(sys.argv) == 1:
     print("Error: need to specify model name")
     print("Usage: python demo.py your.model")
@@ -32,6 +38,8 @@ def on_message(client, userdata, message):
   print("message qos=",message.qos)
   print("message retain flag=",message.retain)
   cmd = str(message.payload.decode("utf-8"))
+  if cmd == "status" :
+    mqtt_client.publish("pi3/aiy/snowboy/status", "interrupted" if interrupted else "listening" )
   if cmd == "interrupt" :
     interrupted = True
   if cmd == "listen" :
@@ -51,7 +59,7 @@ detector = snowboydecoder_arecord.HotwordDetector(model, sensitivity=0.5)
 print('Listening... Press Ctrl+C to exit')
 
 # main loop
-detector.start(detected_callback=snowboydecoder_arecord.play_audio_file,
+detector.start(detected_callback=hotword_detected,
                interrupt_check=interrupt_callback,
                sleep_time=0.03)
 
