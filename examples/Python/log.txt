@@ -1,0 +1,2 @@
+2018-03-27 23:57:54 INFO     This is a message!
+2018-03-27 23:57:54 ERROR    Here is another
