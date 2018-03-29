@@ -53,6 +53,7 @@ mqtt_client.on_message = on_mqtt_message
 mqtt_client.connect(mqtt_broker_address) #connect to broker
 mqtt_client.subscribe("pi3/aiy/snowboy/cmd",1)
 mqtt_client.loop_start()
+mqtt_client.publish("pi3/aiy/snowboy/status", "stopped" if interrupted else "started" )
 
 #####################################################################################
 #    Snowboy stuff 
@@ -67,7 +68,6 @@ def hotword_detected():
     logging.info('hotword_detected')
     mqtt_client.publish("pi3/aiy/snowboy/event_type","hotword_detected" )
 
-		
 callbacks = [lambda: hotword_detected(),
              lambda: hotword_detected()]
 						 
