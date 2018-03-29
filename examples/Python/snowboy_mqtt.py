@@ -36,8 +36,6 @@ def on_mqtt_message(client, userdata, message):
   global interrupted
   cmd = str(message.payload.decode("utf-8"))
   logging.info("mqtt rcvd=" + cmd + "[topic=" + message.topic + ",qos=" + str(message.qos) + ",retain=" + str(message.retain) + "]")
-  if cmd == "status" :
-    mqtt_client.publish("pi3/aiy/snowboy/status", "stopped" if interrupted else "started" )
   if cmd == "stop" :
     interrupted = True
   elif cmd == "start" :
