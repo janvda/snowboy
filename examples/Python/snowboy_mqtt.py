@@ -61,7 +61,9 @@ mqtt_client.publish("pi3/aiy/snowboy/status", "stopped" if interrupted else "sta
 #
 models = [ "./resources/models/snowboy.umdl", 
            "./resources/models/stemija.pmdl" ]
-sensitivity = [0.5]*len(models)
+
+# When sensitiviy is higher, the hotword gets more easily triggered. But you might get more false alarms.
+sensitivity = [0.5 , 0.4 ]
 detector = snowboydecoder_arecord.HotwordDetector(models, sensitivity=sensitivity)
 
 def hotword_detected():
