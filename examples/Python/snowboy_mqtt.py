@@ -47,7 +47,7 @@ def on_mqtt_message(client, userdata, message):
   logging.debug ("interrupted="+str(interrupted))
 		
 global mqtt_client
-mqtt_broker_address="192.168.1.131" 
+mqtt_broker_address="localhost" 
 mqtt_client = mqtt.Client("pi3_aiy_snowboy") #create new instance
 mqtt_client.on_message = on_mqtt_message
 mqtt_client.connect(mqtt_broker_address) #connect to broker
